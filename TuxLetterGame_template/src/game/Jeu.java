@@ -106,6 +106,8 @@ public abstract class Jeu {
     
     
     protected abstract void démarrePartie(Partie partie);
+
+    //Heu je test un truc
     
     
     protected abstract void appliqueRegles(Partie partie);
