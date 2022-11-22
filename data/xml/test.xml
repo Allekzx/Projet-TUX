@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this template
+-->
+
+
+
+<ns1:dictionnaire
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns:ns1='http://Projet_Tux.fr/AlexLeo/dictionnaire'
+    xsi:schemaLocation='http://Projet_Tux.fr/AlexLeo/dictionnaire file:/home/d/delagral/L3%20miage/TUX/data/XSD/dico.xsd'>
+    <ns1:mot niveau="1">Jouet</ns1:mot>
+</ns1:dictionnaire>
+
