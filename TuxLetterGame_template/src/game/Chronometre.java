@@ -5,7 +5,7 @@ public class Chronometre {
     private long end;
     private long current;
     private int limite;
-    private int a;
+    
     public Chronometre(int limite) {
         //intialisation
         this.limite = limite;
