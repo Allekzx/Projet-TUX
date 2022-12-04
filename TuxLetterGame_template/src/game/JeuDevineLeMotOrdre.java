@@ -9,59 +9,64 @@ package game;
  * @author bouvi
  */
 public class JeuDevineLeMotOrdre extends Jeu {
-    int nbLettresRestantes;
+
     Chronometre chrono;
-    
-    public JeuDevineLeMotOrdre(){
+
+    public JeuDevineLeMotOrdre() {
         super();
     }
 
     @Override
     protected void démarrePartie(Partie partie) {
-       nbLettresRestantes = lettres.size();
-       chrono = new Chronometre(60000);
-       while(nbLettresRestantes ==0 && chrono.remainsTime()){
-           appliqueRegles(partie);
-       }
-       terminePartie(partie);
-    }
+        nbLettresRestantes = lettres.size();
+        chrono = new Chronometre(60);   
+        chrono.start();
+        appliqueRegles(partie);
+        }
+    
 
     @Override
-    protected void appliqueRegles(Partie partie) {
-        if(tuxTrouveLettre()){
-            if(nbLettresRestantes == 0){
-                chrono.stop();
-                terminePartie(partie);
+    protected boolean appliqueRegles(Partie partie) {
+        boolean res = true;
+        if(chrono.remainsTime()){
+            if (tuxTrouveLettre()) {
+                if (nbLettresRestantes == 0) {
+                    chrono.stop();
+                }
             }
+        }else{
+            res = false;
+            
         }
+        return res;
+        
     }
 
     @Override
     protected void terminePartie(Partie partie) {
-        if(chrono.getSeconds() == 0){
-            partie.setTemps((int)chrono.getTime());
-        }else{
+        if (chrono.getSeconds() == 0) {
+            partie.setTemps((int) chrono.getTime());
+        } else {
             partie.setTemps(chrono.getSeconds());
         }
-       partie.setTrouve(nbLettresRestantes);
+        partie.setTrouve(nbLettresRestantes);
+        lettres.clear();
     }
-    
-    
-    private boolean tuxTrouveLettre(){
+
+    private boolean tuxTrouveLettre() {
         boolean res = false;
-        if(nbLettresRestantes == 0){
+        if (nbLettresRestantes == 0) {
             res = true;
-        }else{
-            if(collision(lettres.get(lettres.size()-nbLettresRestantes + 1))){
-            res = true;
-            nbLettresRestantes--;
+        } else {
+
+            if (collision(lettres.get(lettres.size() - nbLettresRestantes))) {
+                env.removeObject(lettres.get(lettres.size() - nbLettresRestantes));
+                res = true;
+                nbLettresRestantes--;
             }
         }
-        
-        
-        
+
         return res;
     }
-    
-    
+
 }

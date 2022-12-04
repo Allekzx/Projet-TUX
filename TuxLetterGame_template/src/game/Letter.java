@@ -13,9 +13,10 @@ import env3d.advanced.EnvNode;
 public class Letter extends EnvNode {
 
     private char letter;
+    
 
     public Letter(char letter, double x, double y) {
-
+        
         this.letter = letter;
         setScale(5.0);
         setX(x);// positionnement au milieu de la largeur de la room
@@ -28,6 +29,9 @@ public class Letter extends EnvNode {
             setTexture("models/letter/" + this.letter + ".png");
         }
         setModel("models/letter/cube.obj");
-
+        
     }
+
+    
+    
 }

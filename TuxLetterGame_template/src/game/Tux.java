@@ -19,11 +19,11 @@ public class Tux extends EnvNode {
         this.env = env;
         this.room = room;
         
-        setScale(4.0);
+        setScale(7.0);
         setX( this.room.getWidth()/2 );// positionnement au milieu de la largeur de la room
         setY(getScale() * 1.1); // positionnement en hauteur basé sur la taille de Tux
         setZ( this.room.getDepth()/2 ); // positionnement au milieu de la profondeur de la room
-        setTexture("models/tux/tux.png");
+        setTexture("models/tux/tux_special.png");
         setModel("models/tux/tux.obj"); 
     }
     
@@ -62,7 +62,7 @@ public class Tux extends EnvNode {
     public boolean testeRoomCollision(double x, double z){
         boolean collision = false;
         
-        if((z + getScale() == room.getDepth()) || (z-getScale() == 0) || (x + getScale() == room.getWidth()) || (x-getScale() == 0) ){
+        if((z == room.getDepth()) || (z == 0) || (x == room.getWidth()) || (x == 0) ){
             collision = true;
         }
         
@@ -70,4 +70,6 @@ public class Tux extends EnvNode {
     }
     
     
+    
+  
 }

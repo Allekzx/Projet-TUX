@@ -9,7 +9,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
 <ns1:plateau
     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xmlns:ns1='http://Projet_Tux.fr/AlexLeo/plateau'
-    xsi:schemaLocation='http://Projet_Tux.fr/AlexLeo/plateau file:/home/d/delagral/L3%20miage/TUX/data/XSD/plateau.xsd'>
+    xsi:schemaLocation='http://Projet_Tux.fr/AlexLeo/plateau ../XSD/plateau.xsd'>
     <ns1:dimensions>
         <ns1:height>100</ns1:height>
         <ns1:width>40</ns1:width>

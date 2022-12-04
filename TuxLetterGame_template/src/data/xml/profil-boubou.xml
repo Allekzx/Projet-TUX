@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<profil xmlns="http://myGame/tux" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myGame/tux ../xsd/profil.xsd">
+    <nom>boubou</nom>
+    <avatar/>
+    <anniversaire>2001-08-24</anniversaire>
+    <parties>
+        <partie date="2022-11-26">
+            <temps>4</temps>
+            <niveau numero="2">
+                <mot>arbre</mot>
+            </niveau>
+        </partie>
+    <partie date="2001-08-24">
+            <temps>7</temps>
+            <niveau numero="0">
+                <mot>escalier</mot>
+            </niveau>
+        </partie>
+        <partie date="2001-08-24" trouvé = "50">
+            <temps>8</temps>
+            <niveau numero="0">
+                <mot>etudiant</mot>
+            </niveau>
+        </partie>
+        <partie date="2001-08-24">
+            <temps>12</temps>
+            <niveau numero="0">
+                <mot>ambulance</mot>
+            </niveau>
+        </partie>
+    </parties>
+</profil>

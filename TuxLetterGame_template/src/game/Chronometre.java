@@ -5,7 +5,7 @@ public class Chronometre {
     private long end;
     private long current;
     private int limite;
-    
+
     public Chronometre(int limite) {
         //intialisation
         this.limite = limite;
@@ -46,8 +46,9 @@ public class Chronometre {
     public boolean remainsTime() {
         current = System.currentTimeMillis();
         int timeSpent;
-        timeSpent = (int) ((current - begin)/1000.0);
-        return (timeSpent > limite);
+        timeSpent = (int) ((current - begin)/1000);
+
+        return (timeSpent < limite);
     }
      
 }

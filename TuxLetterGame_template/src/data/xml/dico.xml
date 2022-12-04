@@ -23,9 +23,9 @@
         <mot>livre</mot>
         <mot>porte</mot>
         <mot>fille</mot>
-        <mot>garçon</mot>
+        <mot>garcon</mot>
         <mot>arbre</mot>
-        <mot>école</mot>
+        <mot>ecole</mot>
         <mot>route</mot>
         <mot>manger</mot>
         <mot>matin</mot>  
@@ -35,18 +35,18 @@
         <mot>ascenceur</mot>
         <mot>maison</mot>
         <mot>voiture</mot>
-        <mot>fenêtre</mot>
+        <mot>fenetre</mot>
         <mot>poubelle</mot>
         <mot>grillage</mot>
         <mot>chemin</mot>
-        <mot>bâtiment</mot>
-        <mot>légumes</mot>
+        <mot>batiment</mot>
+        <mot>legumes</mot>
         <mot>descendre</mot>
         <mot>escalier</mot>
     </niveau>
     
     <niveau numero = "4">
-        <mot>sérendipité</mot>
+        <mot>serendipite</mot>
         <mot>anniversaire</mot>
         <mot>coloriage</mot>
         <mot>vacances</mot>
@@ -54,7 +54,7 @@
         <mot>rhinocéros</mot>
         <mot>banquette</mot>
         <mot>escabeau</mot>
-        <mot>étudiant</mot>
+        <mot>etudiant</mot>
         <mot>incendie</mot>
         <mot>extincteur</mot>
     </niveau>
@@ -68,7 +68,7 @@
         <mot>terrorisme</mot>
         <mot>escalator</mot>
         <mot>ventouse</mot>
-        <mot>téléscope</mot>
+        <mot>telescope</mot>
         <mot>cyclone</mot>
         <mot>photocopieuse</mot>
     </niveau>
