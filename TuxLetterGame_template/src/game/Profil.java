@@ -190,7 +190,7 @@ public class Profil {
             
             toXML(nomFichier);
         }else{
-            System.out.println("Nombre de partie : "+parties.size());
+            _doc = fromXML(nomFichier);
             Element parties = (Element) _doc.getElementsByTagName("parties").item(0);
             
             Partie p = this.parties.get(this.parties.size()-1);

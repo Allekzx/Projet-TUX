@@ -239,6 +239,7 @@ public abstract class Jeu {
                     // joue
                     joue(partie);
                     // enregistre la partie dans le profil --> enregistre le profil
+                    partie.enregistrerHiscores(profil);
                     profil.ajoutePartie(partie);
                     profil.sauvegarder("src/data/xml/profil-" + profil.getNom() + ".xml");
                     menuFinDePartie(partie, profil);
@@ -274,8 +275,11 @@ public abstract class Jeu {
                         // joue
                         joue(partie);
                         // enregistre la partie dans le profil --> enregistre le profil
+                        partie.enregistrerHiscores(profil);
                         profil.ajoutePartie(partie);
                         profil.sauvegarder("src/game/profil-" + profil.getNom() + ".xml");
+                        
+                                
                         menuFinDePartie(partie, profil);
                         playTheGame = MENU_VAL.MENU_JOUE;
                     }
@@ -598,10 +602,4 @@ public abstract class Jeu {
         }
         return res;
     }
-    
-    private void enleverMotTrouveParProfil(Profil profil, Dico dico){
-        
-    }
-    
-    
 }

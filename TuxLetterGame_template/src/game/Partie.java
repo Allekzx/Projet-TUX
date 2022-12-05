@@ -4,8 +4,15 @@
  */
 package game;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -113,6 +120,163 @@ public class Partie {
         
         return res;
         
+    }
+    
+    private int score(){
+        int res = 0;
+        switch(niveau){
+            case 1:
+                res =60 -temps;
+                break;
+            case 2 : 
+                res = (60-temps)*2;
+                break;
+            case 3: 
+                res =(60- temps)*4;
+                break;
+            case 4: 
+                res = (60-temps)*5;
+                break;
+            case 5 :
+                res = (60-temps)*7;
+                break;      
+        }
+        if(60 - temps < 0){
+            res = 0;
+        }
+        return res;
+    }
+    private void toXML(String nomFichier, Document doc) {
+        try {
+            XMLUtil.DocumentTransform.writeDoc(doc, nomFichier);
+        } catch (Exception ex) {
+            Logger.getLogger(Profil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private Document fromXML(String nomFichier) {
+        try {
+            return XMLUtil.DocumentFactory.fromFile(nomFichier);
+        } catch (Exception ex) {
+            Logger.getLogger(Profil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public void enregistrerHiscores(Profil profil){
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document _doc = db.newDocument();
+            if(fromXML("src/data/xml/hiscores.xml")==null){
+                Element root = _doc.createElement("hiscores");
+                _doc.setXmlVersion("1.0");
+                
+                root.setAttribute("xmlns", "http://myGame/tux");
+                root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+                root.setAttribute("xsi:schemaLocation", "http://myGame/tux ../xsd/hiscores.xsd");
+                
+                
+                
+                Element nNom = _doc.createElement("nom");
+                nNom.setTextContent(profil.getNom());
+                
+                Element nAvatar = _doc.createElement("avatar");
+                nAvatar.setTextContent(profil.getAvatar());
+                                
+                Element nMot = _doc.createElement("mot");
+                nMot.setTextContent(this.getMot());
+                
+                Element nPartie = _doc.createElement("partie");
+                nPartie.setAttribute("score", ""+this.score());
+                nPartie.setAttribute("date", this.getDate());
+                
+                nPartie.appendChild(nNom);
+                nPartie.appendChild(nAvatar);
+                nPartie.appendChild(nMot);
+                
+                root.appendChild(nPartie);
+                
+                _doc.appendChild(root);
+                
+                toXML("src/data/xml/hiscores.xml", _doc);
+                
+            }else{
+                
+                _doc = fromXML("src/data/xml/hiscores.xml");
+                
+                NodeList parties = _doc.getElementsByTagName("partie");
+                if(parties.getLength()<10){
+                    Element root =(Element) _doc.getElementsByTagName("hiscores").item(0);
+                
+                    Element nPartie = _doc.createElement("partie");
+                    nPartie.setAttribute("score", ""+score());
+                    nPartie.setAttribute("date", this.getDate());
+
+
+
+                    Element nNom = _doc.createElement("nom");
+                    nNom.setTextContent(profil.getNom());
+
+                    Element nMot = _doc.createElement("mot");
+                    nMot.setTextContent(this.getMot());
+
+                    Element nAvatar = _doc.createElement("avatar");
+                    nAvatar.setTextContent(profil.getAvatar());
+
+                    nPartie.appendChild(nNom);
+                    nPartie.appendChild(nMot);
+                    nPartie.appendChild(nAvatar);
+
+
+                    root.appendChild(nPartie);
+                }else{
+                    int indexMin = 0;
+                    Element partie0 = (Element) parties.item(0);
+                    int min =Integer.parseInt(partie0.getAttribute("score"));
+                    for(int i = 0; i < parties.getLength(); i++){
+                        Element ePartie = (Element) parties.item(i);
+                        if(min > Integer.parseInt(ePartie.getAttribute("score"))){
+                            min = Integer.parseInt(ePartie.getAttribute("score"));
+                            indexMin = i;
+                        }
+                    }
+                    if(this.score() > min){
+                        Element partieAEnlever = (Element) parties.item(indexMin);
+                        Element root =(Element) _doc.getElementsByTagName("hiscores").item(0);
+                
+                        Element nPartie = _doc.createElement("partie");
+                        nPartie.setAttribute("score", ""+score());
+                        nPartie.setAttribute("date", this.getDate());
+
+
+
+                        Element nNom = _doc.createElement("nom");
+                        nNom.setTextContent(profil.getNom());
+
+                        Element nMot = _doc.createElement("mot");
+                        nMot.setTextContent(this.getMot());
+
+                        Element nAvatar = _doc.createElement("avatar");
+                        nAvatar.setTextContent(profil.getAvatar());
+
+                        nPartie.appendChild(nNom);
+                        nPartie.appendChild(nMot);
+                        nPartie.appendChild(nAvatar);
+
+                        
+                        root.appendChild(nPartie);
+                        root.removeChild(partieAEnlever);
+                    }
+                }
+                
+                
+                
+                toXML("src/data/xml/hiscores.xml", _doc);
+                
+            }
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(Partie.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
