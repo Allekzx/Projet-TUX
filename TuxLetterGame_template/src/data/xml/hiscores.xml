@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- Ceci est une instance xml du fichier hiscores qui a pour
+     but de faire un classement des joueurs de TUX.
+     
+     auteurs : Bouvier Léo Delagrange Alex
+-->
+
 <tux:hiscores xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xmlns:tux='http://myGame/tux' xsi:schemaLocation='http://myGame/tux ../xsd/hiscores.xsd'>
+    
+    <tux:partie score="50" date="2002-24-05">
+        <tux:nom>Lucs</tux:nom>
+        <tux:avatar>../images/voldemort.jpg</tux:avatar>
+        <tux:mot>porte</tux:mot>
+    </tux:partie>
+    
+    <tux:partie score="60" date="2002-24-05">
+        <tux:nom>Lucs2</tux:nom>
+        <tux:avatar>../images/voldemort.jpg</tux:avatar>
+        <tux:mot>porte</tux:mot>
+    </tux:partie>
 </tux:hiscores>
