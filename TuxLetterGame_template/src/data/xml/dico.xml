@@ -1,10 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<dictionnaire xmlns:xsi="http://www.w3.org/2001/XMLSchema-Instance"
-              xsi:schemaLocation="http://myGame/tux ../xsd/dico.xsd"
-              xmlns="http://myGame/tux">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<dictionnaire xmlns="http://myGame/tux" xmlns:xsi="http://www.w3.org/2001/XMLSchema-Instance" xsi:schemaLocation="http://myGame/tux ../xsd/dico.xsd">
     
-    <niveau numero = "1">
+    <niveau numero="1">
         <mot>deux</mot>
         <mot>oui</mot>
         <mot>soeur</mot>
@@ -17,7 +14,7 @@
         <mot>amis</mot>
     </niveau>
 
-    <niveau numero = "2">
+    <niveau numero="2">
         <mot>trois</mot>
         <mot>maths</mot>
         <mot>livre</mot>
@@ -31,7 +28,7 @@
         <mot>matin</mot>  
     </niveau>
 
-    <niveau numero = "3">
+    <niveau numero="3">
         <mot>ascenceur</mot>
         <mot>maison</mot>
         <mot>voiture</mot>
@@ -43,9 +40,10 @@
         <mot>legumes</mot>
         <mot>descendre</mot>
         <mot>escalier</mot>
-    </niveau>
+        <mot>appareil</mot>
+</niveau>
     
-    <niveau numero = "4">
+    <niveau numero="4">
         <mot>serendipite</mot>
         <mot>anniversaire</mot>
         <mot>coloriage</mot>
@@ -57,9 +55,10 @@
         <mot>etudiant</mot>
         <mot>incendie</mot>
         <mot>extincteur</mot>
-    </niveau>
+    <mot>lavabo</mot>
+</niveau>
     
-    <niveau numero = "5">
+    <niveau numero="5">
         <mot>halieutique</mot>
         <mot>xylophone</mot>
         <mot>jugulaire</mot>
@@ -73,4 +72,3 @@
         <mot>photocopieuse</mot>
     </niveau>
 </dictionnaire>
-

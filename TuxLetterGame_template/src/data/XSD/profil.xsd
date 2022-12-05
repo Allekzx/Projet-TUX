@@ -31,12 +31,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XmlSchema.xsd to edit this te
             <xs:element name="niveau" type="tux:Niveau"/>
         </xs:sequence>
         <xs:attribute name="date" type="xs:date" use="required"/>
-        <xs:attribute name="trouvé" type="xs:string" use="optional"/>
+        <xs:attribute name="trouvé" type="tux:Pourcentage" use="optional"/>
     </xs:complexType>
     
-    <xs:simpleType name="Avatar">
-        <xs:restriction base="xs:string">
-            <xs:pattern value="([a-zA-Z0-9])*\.(ai|eps|pdf|psd|jpg|gif|tif|png|svg)"/>
+    
+    <xs:simpleType name="Pourcentage">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="100"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

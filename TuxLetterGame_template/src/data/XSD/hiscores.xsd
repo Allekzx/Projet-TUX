@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/XML/XmlSchema.xsd to edit this template
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://myGame/tux"
+           xmlns:tux="http://myGame/tux"
+           elementFormDefault="qualified">
+    <xs:element name="hiscores" type="tux:Hiscores"/>
+    <xs:complexType name="Hiscores">
+        <xs:sequence>
+            <xs:element name="profil" type="tux:ProfilHiscores" maxOccurs = "unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ProfilHiscores">
+        <xs:sequence>
+            <xs:element name="nom" type ="xs:string"/>
+            <xs:element name="avatar" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="score" type="tux:Pourcentage"/>
+        
+    </xs:complexType>
+    <xs:simpleType name="Pourcentage">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+</xs:schema>

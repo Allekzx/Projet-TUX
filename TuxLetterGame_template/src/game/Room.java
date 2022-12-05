@@ -1,5 +1,13 @@
 package game;
 
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -10,9 +18,9 @@ package game;
  * @author bouvi
  */
 public class Room {
-    private int depth;
-    private int height;
-    private int width;
+    private double depth;
+    private double height;
+    private double width;
     private String textureBottom;
     private String textureNorth;
     private String textureEast;
@@ -22,26 +30,34 @@ public class Room {
     
     
     
-    public Room(){
-        this.textureBottom = "textures/skybox/interstellar/bottom.png";
-        this.textureEast = "textures/skybox/interstellar/east.png";
-        this.textureNorth = "textures/skybox/interstellar/north.png";
-        this.textureWest = "textures/skybox/interstellar/west.png";
-        this.depth = 100;
-        this.width = 100;
-        this.height = 60;
+    public Room() throws SAXException, IOException, ParserConfigurationException{
+        DocumentBuilderFactory dbF = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbF.newDocumentBuilder();
+        Document doc = db.parse("src/data/xml/plateau.xml");
+        Element dimension = (Element) doc.getElementsByTagName("ns1:dimensions").item(0);
+        depth =Double.parseDouble(dimension.getElementsByTagName("ns1:depth").item(0).getTextContent());
+        height = Double.parseDouble(dimension.getElementsByTagName("ns1:height").item(0).getTextContent());
+        width = Double.parseDouble(dimension.getElementsByTagName("ns1:width").item(0).getTextContent());
+        
+        
+        Element mapping = (Element) doc.getElementsByTagName("ns1:mapping").item(0);
+        
+        textureBottom = mapping.getElementsByTagName("ns1:textureBottom").item(0).getTextContent();
+        textureEast = mapping.getElementsByTagName("ns1:textureEast").item(0).getTextContent();
+        textureNorth = mapping.getElementsByTagName("ns1:textureNorth").item(0).getTextContent();
+        textureWest = mapping.getElementsByTagName("ns1:textureWest").item(0).getTextContent();
     }
 
-    public int getDepth() {
-        return depth;
+    public double getDepth() {
+        return this.depth;
     }
 
-    public int getHeight() {
-        return height;
+    public double getHeight() {
+        return this.height;
     }
 
-    public int getWidth() {
-        return width;
+    public double getWidth() {
+        return this.width;
     }
 
     public String getTextureBottom() {

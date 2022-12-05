@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 
 
 
@@ -15,7 +19,10 @@ import java.io.*;
  *
  * @author bouvi
  */
-public class Dico {
+public class Dico extends DefaultHandler{
+    private StringBuffer buffer;
+    private boolean inDictionnaire = false, inNiveau = false, inMot = false;
+    private int numero;
 
     private ArrayList<String> listeNiveau1;
     private ArrayList<String> listeNiveau2;
@@ -26,12 +33,14 @@ public class Dico {
     private String cheminFichierDico;
 
     public Dico(String cheminFichierDico) {
-        this.cheminFichierDico = cheminFichierDico;
+        super();
         listeNiveau1 = new ArrayList<String>();
         listeNiveau2 = new ArrayList<String>();
         listeNiveau3 = new ArrayList<String>();
         listeNiveau4 = new ArrayList<String>();
         listeNiveau5 = new ArrayList<String>();
+        this.cheminFichierDico = cheminFichierDico;
+        
 
     }
 
@@ -101,6 +110,8 @@ public class Dico {
                 break;
         }
     }
+    
+    
 
     public void lireDictionnaireDOM() {
         try {
@@ -131,5 +142,90 @@ public class Dico {
             e.toString();
         }
 
+    }
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if("dictionnaire".equals(qName)){
+            inDictionnaire = true;
+        }
+        else if ("niveau".equals(qName)){
+            try{
+                numero = Integer.parseInt(attributes.getValue("numero"));
+            }catch(Exception e){
+                throw new SAXException(e);
+            }
+            inNiveau = true;
+        }else{
+            buffer = new StringBuffer();
+            if("mot".equals(qName)){
+                inMot = true;
+            }else{
+                throw new SAXException("Balise "+qName+" inconnue.");
+            }
+        }
+    }
+    
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        if("dictionnaire".equals(qName)){
+            inDictionnaire = false;
+        }else if("niveau".equals(qName)){
+            inNiveau = false;
+        }else if("mot".equals(qName)){
+            ajoutMotDico(numero, buffer.toString());
+            buffer = null;
+            inMot = false;
+        }else{
+            throw new SAXException("Balise "+ qName + " inconnue");
+        }
+    }
+        
+    @Override
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        String lecture = new String(ch,start,length);
+        if(buffer!=null) buffer.append(lecture);
+    }
+    
+    @Override
+    public void startDocument() throws SAXException {
+        System.out.println("Début du parsing");
+    }
+
+    @Override
+    public void endDocument() throws SAXException {
+        System.out.println("Fin du parsing");
+        System.out.println("Résultat du parsing");
+        System.out.println("Liste mots niveau 1 : ");
+    } 
+    
+    
+    public void lireDictionnaire() throws ParserConfigurationException, org.xml.sax.SAXException, IOException{
+        SAXParserFactory fabrique = SAXParserFactory.newInstance(); 
+        SAXParser parseur = fabrique.newSAXParser(); 
+  
+        File fichier = new File("src/data/xml/dico.xml");
+        parseur.parse(fichier, this);
+    }
+    public void afficherDico(){
+        System.out.println("Mot de la liste 1 : \n");
+        for(int i = 0; i < listeNiveau1.size();i++){
+            System.out.println("Mot "+(i+1)+" : " + listeNiveau1.get(i));
+        }
+        System.out.println("Mot de la liste 2 : \n");
+        for(int i = 0; i < listeNiveau2.size();i++){
+            System.out.println("Mot "+(i+1)+" : " + listeNiveau2.get(i));
+        }
+         System.out.println("Mot de la liste 3 : \n");
+        for(int i = 0; i < listeNiveau3.size();i++){
+            System.out.println("Mot "+(i+1)+" : " + listeNiveau3.get(i));
+        }
+         System.out.println("Mot de la liste 4 : \n");
+        for(int i = 0; i < listeNiveau4.size();i++){
+            System.out.println("Mot "+(i+1)+" : " + listeNiveau4.get(i));
+        }
+         System.out.println("Mot de la liste 5 : \n");
+        for(int i = 0; i < listeNiveau5.size();i++){
+            System.out.println("Mot "+(i+1)+" : " + listeNiveau5.get(i));
+        }
     }
 }

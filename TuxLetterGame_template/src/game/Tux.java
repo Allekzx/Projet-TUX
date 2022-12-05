@@ -19,10 +19,10 @@ public class Tux extends EnvNode {
         this.env = env;
         this.room = room;
         
-        setScale(7.0);
-        setX( this.room.getWidth()/2 );// positionnement au milieu de la largeur de la room
+        setScale(5.0);
+        setX( room.getWidth()/2 );// positionnement au milieu de la largeur de la room
         setY(getScale() * 1.1); // positionnement en hauteur basé sur la taille de Tux
-        setZ( this.room.getDepth()/2 ); // positionnement au milieu de la profondeur de la room
+        setZ( room.getDepth()/2 ); // positionnement au milieu de la profondeur de la room
         setTexture("models/tux/tux_special.png");
         setModel("models/tux/tux.obj"); 
     }

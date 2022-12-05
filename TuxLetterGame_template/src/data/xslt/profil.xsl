@@ -44,7 +44,7 @@
                     <br/>
                     <div id="stats">
                         <div class="col">
-                            <p class="stat"><xsl:value-of select="count(//tux:mot) div 50 *100"/> %</p>
+                            <p class="stat"><xsl:value-of select="format-number(count(//tux:mot) div 50 *100,0)"/> %</p>
                             <p class="label">Score</p>
                         </div>
                     </div>
@@ -198,7 +198,7 @@
             <caption style="width:250px"><h3> Partie du <xsl:value-of select="@date"/></h3></caption>
             <tr>
                 <td>Temps :</td>
-                <td><xsl:value-of select="tux:temps"/> min</td>
+                <td><xsl:value-of select="tux:temps"/> secondes</td>
             </tr>
             <tr>
                 <td>Niveau :</td>
@@ -209,6 +209,7 @@
                 <td><xsl:value-of select="tux:niveau/tux:mot"/>
                 </td>
             </tr>
+           
         </table>
     </xsl:template>
 

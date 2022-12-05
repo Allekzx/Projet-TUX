@@ -4,6 +4,10 @@
  */
 package game;
 
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+
 /**
  *
  * @author bouvi
@@ -12,7 +16,7 @@ public class JeuDevineLeMotOrdre extends Jeu {
 
     Chronometre chrono;
 
-    public JeuDevineLeMotOrdre() {
+    public JeuDevineLeMotOrdre() throws SAXException, IOException, ParserConfigurationException {
         super();
     }
 
@@ -35,6 +39,8 @@ public class JeuDevineLeMotOrdre extends Jeu {
                 }
             }
         }else{
+            partie.setTemps(60);
+            partie.setTrouve((partie.getMot().length() - nbLettresRestantes/partie.getMot().length()) * 100);
             res = false;
             
         }

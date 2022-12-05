@@ -5,13 +5,16 @@
 package game;
 
 import env3d.Env;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.lwjgl.input.Keyboard;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -30,10 +33,12 @@ public abstract class Jeu {
     protected Profil profil;
     private final Dico dico;
     ArrayList<Letter> lettres;
-    protected EnvTextMap menuText;                         //text (affichage des texte du jeu)
+    protected EnvTextMap menuText;                         
     protected int nbLettresRestantes;
+    private EditeurDico editDico;
+    
 
-    public Jeu() {
+    public Jeu() throws SAXException, IOException, ParserConfigurationException {
 
         // Crée un nouvel environnement
         env = new Env();
@@ -61,7 +66,15 @@ public abstract class Jeu {
         // Instancie un profil par défaut
         // Dictionnaire
         dico = new Dico("src/data/xml/dico.xml");
-        dico.lireDictionnaireDOM();
+        dico.lireDictionnaire();
+        dico.afficherDico();
+        
+        // Instancie un éditeur de dico
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.newDocument();
+        editDico = new EditeurDico(doc);
+        editDico.lireDOM("src/data/xml/dico.xml");
 
         // instancie le menuText
         menuText = new EnvTextMap(env);
@@ -79,7 +92,9 @@ public abstract class Jeu {
         menuText.addText("1. Charger un profil de joueur existant ?", "Principal1", 250, 280);
         menuText.addText("2. Créer un nouveau joueur ?", "Principal2", 250, 260);
         menuText.addText("3. Sortir du jeu ?", "Principal3", 250, 240);
-
+        menuText.addText("4. Ajouter un mot dans le dictionnaire", "ajoutMot", 250, 220);
+        menuText.addText("Veuillez entrer le niveau du mot que vous voulez ajouter (de 1 à 5) : ", "ajoutMotNiveau", 50, 300);
+        menuText.addText("Ajouter maintenant le mot que vous voulez.\n (ne doit pas contenir de caractères spéciaux) : ", "ajoutMotMot", 25, 300);
         // Choix niveau
         menuText.addText("Choisissez un niveau", "Niveau", 200, 300);
         menuText.addText("1. Niveau 1", "Niveau1", 250, 280);
@@ -90,15 +105,23 @@ public abstract class Jeu {
         //Profil et partie
         menuText.addText("1. Afficher ma partie", "demandePartie", 200, 300);
         menuText.addText("2. Afficher mon profil complet", "demandeProfil", 200, 280);
-        
-        menuText.addText("Toutes vos parties précédentes on été terminé à 100%,.\nVeuilleZ commencer une nouvelle partie", "pasDePartie",100,300);
+
+        menuText.addText("Toutes vos parties précédentes on été terminé à 100%,.\nVeuilleZ commencer une nouvelle partie", "pasDePartie", 100, 300);
         menuText.addText("1. Exit", "exit", 250, 150);
         
+        //Avatar 
+        menuText.addText("Choisissez votre avatar", "Avatar", 200,300);
+        menuText.addText("1. Voldemort (AKA le méchant le plus stylé de l'histoire)","Voldemort", 200, 280);
+        menuText.addText("2. Thanos","Thanos", 200, 260);
+        menuText.addText("3. Dark Vador", "Dark Vador", 200, 240);
+
     }
 
     /**
      * Gère le menu principal
      *
+     * @throws javax.xml.parsers.ParserConfigurationException
+     * @throws javax.xml.transform.TransformerException
      */
     public void execute() throws ParserConfigurationException, TransformerException {
 
@@ -119,7 +142,6 @@ public abstract class Jeu {
         menuText.getText("NomJoueur").clean();
         return nomJoueur;
     }
-
     // fourni, à compléter
     private MENU_VAL menuJeu() throws TransformerException {
 
@@ -212,6 +234,7 @@ public abstract class Jeu {
                     mot = dico.getMotDepuisListeNiveaux(niveauTemp);
                     displayMotATrouver(mot);
                     partie = new Partie(todaysDate, mot, niveauTemp);
+                    partie.setNiveau(niveauTemp);
 
                     // joue
                     joue(partie);
@@ -222,21 +245,18 @@ public abstract class Jeu {
                     playTheGame = MENU_VAL.MENU_JOUE;
                     break;
 
-
-
                 // -----------------------------------------
                 // Touche 2 : Charger une partie existante
                 // -----------------------------------------                
                 case Keyboard.KEY_2: // charge une partie existante
                     partie = profil.chargePartie();
-                    
-                    
-                    if(partie == null){
+
+                    if (partie == null) {
                         env.setRoom(menuRoom);
                         menuText.getText("pasDePartie").display();
                         menuText.getText("exit").display();
                         int touchePasDePartie = 0;
-                        while(touchePasDePartie != Keyboard.KEY_1){
+                        while (touchePasDePartie != Keyboard.KEY_1) {
                             touchePasDePartie = env.getKey();
                             env.advanceOneFrame();
                         }
@@ -244,27 +264,22 @@ public abstract class Jeu {
                         menuText.getText("exit").clean();
                         playTheGame = menuJeu();
 
-                        
-                        
-                    }else{
+                    } else {
                         String motChargé = partie.getMot();
                         int niveau = partie.getNiveau();
                         partie = new Partie("26/11/2022", motChargé, niveau);
                         // Recupère le mot de la partie existante
                         // .........
                         //XXXXXXXX
-
                         // joue
                         joue(partie);
                         // enregistre la partie dans le profil --> enregistre le profil
                         profil.ajoutePartie(partie);
-                        profil.sauvegarder("src/game/profil-"+profil.getNom()+".xml");
+                        profil.sauvegarder("src/game/profil-" + profil.getNom() + ".xml");
                         menuFinDePartie(partie, profil);
-
                         playTheGame = MENU_VAL.MENU_JOUE;
                     }
-                    
-                    
+
                     break;
 
                 // -----------------------------------------
@@ -289,6 +304,7 @@ public abstract class Jeu {
 
         MENU_VAL choix = MENU_VAL.MENU_CONTINUE;
         String nomJoueur;
+        String avatar;
 
         // restaure la room du menu
         env.setRoom(menuRoom);
@@ -297,10 +313,11 @@ public abstract class Jeu {
         menuText.getText("Principal1").display();
         menuText.getText("Principal2").display();
         menuText.getText("Principal3").display();
+        menuText.getText("ajoutMot").display();
 
         // vérifie qu'une touche 1, 2 ou 3 est pressée
         int touche = 0;
-        while (!(touche == Keyboard.KEY_1 || touche == Keyboard.KEY_2 || touche == Keyboard.KEY_3)) {
+        while (!(touche == Keyboard.KEY_1 || touche == Keyboard.KEY_2 || touche == Keyboard.KEY_3 || touche == Keyboard.KEY_4)) {
             touche = env.getKey();
             env.advanceOneFrame();
         }
@@ -309,6 +326,7 @@ public abstract class Jeu {
         menuText.getText("Principal1").clean();
         menuText.getText("Principal2").clean();
         menuText.getText("Principal3").clean();
+        menuText.getText("ajoutMot").clean();
 
         // et décide quoi faire en fonction de la touche pressée
         switch (touche) {
@@ -334,7 +352,9 @@ public abstract class Jeu {
                 // demande le nom du nouveau joueur
                 nomJoueur = getNomJoueur();
                 // crée un profil avec le nom d'un nouveau joueur
+                avatar = getAvatarJoueur();
                 profil = new Profil(nomJoueur, "24/08/2001");
+                profil.setAvatar(avatar);
                 choix = menuJeu();
                 break;
 
@@ -343,6 +363,33 @@ public abstract class Jeu {
             // -------------------------------------
             case Keyboard.KEY_3:
                 choix = MENU_VAL.MENU_SORTIE;
+                break;
+                
+                
+            // -------------------------------------
+            // Touche 4 :Ajouter un mot au dictionnaire
+            // -------------------------------------
+            case Keyboard.KEY_4:
+                int niveauTemp = 0;
+                String niveau = "";
+                String mot = "";
+                do {
+                    menuText.getText("ajoutMotNiveau").display();
+                    niveau = menuText.getText("ajoutMotNiveau").lire(true);
+                    menuText.getText("ajoutMotNiveau").clean();
+                    try{
+                        niveauTemp = Integer.parseInt(niveau);
+                    }catch(NumberFormatException e){
+                        e.toString();
+                    }
+                } while (niveauTemp < 1 && niveauTemp > 5);
+
+                menuText.getText("ajoutMotMot").display();
+                mot = menuText.getText("ajoutMotMot").lire(true);
+                menuText.getText("ajoutMotMot").clean();
+                editDico.ajouterMot(mot, niveauTemp);
+                dico.ajoutMotDico(niveauTemp, mot);
+                editDico.ecrireDOM("src/data/xml/dico.xml");
         }
         return choix;
     }
@@ -459,13 +506,12 @@ public abstract class Jeu {
     }
 
     public void menuFinDePartie(Partie partie, Profil profil) {
-        
-        
+
         env.setRoom(menuRoom);
-        
+
         menuText.getText("demandePartie").display();
         menuText.getText("demandeProfil").display();
-        
+
         int toucheAffichage = 0;
         while (!(toucheAffichage == Keyboard.KEY_1 || toucheAffichage == Keyboard.KEY_2)) {
             toucheAffichage = env.getKey();
@@ -479,9 +525,9 @@ public abstract class Jeu {
         switch (toucheAffichage) {
             case Keyboard.KEY_1:
                 String affichage = partie.toString();
-                
+
                 menuText.addText(affichage, "affichePartie", 150, 300);
-                
+
                 menuText.getText("affichePartie").display();
                 menuText.getText("exit").display();
 
@@ -501,7 +547,6 @@ public abstract class Jeu {
 
     public void affichePartie(Partie partie) {
         String affichage = partie.toString();
-        System.out.println(affichage);
         menuText.addText(affichage, "affichePartie", 250, 300);
         menuText.addText("1. Exit", "exit", 250, 150);
 
@@ -518,10 +563,45 @@ public abstract class Jeu {
     }
 
     public void afficheProfil(Profil profil) {
-        
-        
-        
-        
+        profil.afficheProfil("src/data/xslt/profil.xsl");
     }
 
+    private String getAvatarJoueur(){
+        String res = "";
+        menuText.getText("Avatar").display();
+        menuText.getText("Voldemort").display();
+        menuText.getText("Thanos").display();
+        menuText.getText("Dark Vador").display();
+        int touche = 0;
+        while(!(touche == Keyboard.KEY_1 || touche == Keyboard.KEY_2 ||touche == Keyboard.KEY_3)){
+            touche = env.getKey();
+            env.advanceOneFrame();
+        }
+        menuText.getText("Avatar").clean();
+        menuText.getText("Voldemort").clean();
+        menuText.getText("Thanos").clean();
+        menuText.getText("Dark Vador").clean();
+        
+        switch(touche){
+            case Keyboard.KEY_1 : 
+                res = "../images/voldemort.jpg";
+                break;
+            case Keyboard.KEY_2 : 
+                res = "../images/thanos.jpg";
+                break;
+            case Keyboard.KEY_3 : 
+                res = "../images/dark-vador.jpg";
+                break;
+            default : 
+                break;
+                    
+        }
+        return res;
+    }
+    
+    private void enleverMotTrouveParProfil(Profil profil, Dico dico){
+        
+    }
+    
+    
 }

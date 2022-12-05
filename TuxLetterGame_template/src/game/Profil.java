@@ -4,6 +4,8 @@
  */
 package game;
 
+import game.XMLUtil.DocumentTransform;
+import java.awt.Desktop;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -14,19 +16,14 @@ import org.w3c.dom.Document;
  *
  * @author bouvi
  */
-import java.io.IOException;
+import java.time.LocalDate;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 public class Profil {
 
@@ -171,7 +168,6 @@ public class Profil {
             nNom.setTextContent(nom);
 
             root.appendChild(nNom);
-            System.out.println(root.toString());
 
             Element nAvatar = _doc.createElement("avatar");
             nAvatar.setTextContent(avatar);
@@ -186,19 +182,23 @@ public class Profil {
             Element nParties = _doc.createElement("parties");
 
             for (Partie p : parties) {
-                nParties.appendChild(p.getPartie(_doc));
+                Element nPartie = p.getPartie(_doc);
+                nParties.appendChild(nPartie);
             }
             root.appendChild(nParties);
             _doc.appendChild(root);
-
+            
             toXML(nomFichier);
         }else{
+            System.out.println("Nombre de partie : "+parties.size());
             Element parties = (Element) _doc.getElementsByTagName("parties").item(0);
-            System.out.println(parties.getTextContent());
             
             Partie p = this.parties.get(this.parties.size()-1);
             Element partie = _doc.createElement("partie");
-            partie.setAttribute("date", profileDateToXmlDate("24/08/2001"));
+            partie.setAttribute("date", ""+LocalDate.now());
+            if (p.getTrouvé() != 100){
+                partie.setAttribute("trouvé", ""+p.getTrouvé());
+            }
             
             Element temps = (Element) _doc.createElement("temps");
             temps.setTextContent(""+p.getTemps());
@@ -216,6 +216,7 @@ public class Profil {
             partie.appendChild(niveau);
                   
             parties.appendChild(partie);
+            
             toXML(nomFichier);
         }
 
@@ -243,14 +244,13 @@ public class Profil {
             res = parties.get(i);
             supprimerPartie(res);
         }
-
         return res;
     }
 
     private void supprimerPartie(Partie partie) {
         NodeList parties = _doc.getElementsByTagName("partie");
         int i = 0;
-        while (i < parties.getLength()) {
+        while (i < parties.getLength()){
             Element nPartie = (Element) parties.item(i);
             if (partie.getMot().equals(nPartie.getElementsByTagName("mot").item(0).getTextContent())) {
                 _doc.removeChild(nPartie);
@@ -258,11 +258,19 @@ public class Profil {
             }
         }
     }
+    public void afficheProfil(String xslStreamSource){
+        String res = "";
+        try {   
+            res = DocumentTransform.fromXSLTransformation(xslStreamSource, _doc);
+            FileUtil.stringToFile(res, "src/data/html/profil-"+this.nom+".html");
+            File htmlFile = new File("src/data/html/profil-"+this.nom+".html");
+            Desktop.getDesktop().browse(htmlFile.toURI());
+        }catch(Exception e){
+            e.toString();
+        }
+    }
 
     /* Todo list : 
-        - charger une partie parmis les parties non terminées du profil
-        - charger un profil parmis les fichiers existants
         - afficher tous les profils classés par score
-       
      */
 }

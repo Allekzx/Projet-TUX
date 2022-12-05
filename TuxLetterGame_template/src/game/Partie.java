@@ -62,7 +62,11 @@ public class Partie {
     }
     
     public int getNiveau(){
-        return 0;
+        return niveau;
+    }
+    
+    public void setNiveau(int niveau){
+        this.niveau = niveau;
     }
     
     
@@ -84,6 +88,7 @@ public class Partie {
         }
         return res;
     }
+    
     
     public Element getPartie(Document doc){
         Element res = doc.createElement("partie");

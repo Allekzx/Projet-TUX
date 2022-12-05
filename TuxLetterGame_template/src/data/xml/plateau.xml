@@ -12,8 +12,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
     xsi:schemaLocation='http://Projet_Tux.fr/AlexLeo/plateau ../XSD/plateau.xsd'>
     <ns1:dimensions>
         <ns1:height>100</ns1:height>
-        <ns1:width>40</ns1:width>
-        <ns1:depth>50</ns1:depth>
+        <ns1:width>100</ns1:width>
+        <ns1:depth>100</ns1:depth>
     </ns1:dimensions>
     <ns1:mapping>
         <ns1:textureBottom>textures/floor/grass2.png</ns1:textureBottom>
@@ -21,6 +21,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <ns1:textureWest>textures/skybox/interstellar/west.png</ns1:textureWest>
         <ns1:textureNorth>textures/skybox/interstellar/north.png</ns1:textureNorth>
     </ns1:mapping>
-    <ns1:pion>une url</ns1:pion>
+    <ns1:pion>models/tux/tux_happy.png</ns1:pion>
 
 </ns1:plateau>
